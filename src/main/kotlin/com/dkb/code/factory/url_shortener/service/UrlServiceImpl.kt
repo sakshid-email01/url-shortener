@@ -2,6 +2,7 @@ package com.dkb.code.factory.url_shortener.service
 
 import com.dkb.code.factory.url_shortener.entity.UrlEntity
 import com.dkb.code.factory.url_shortener.repository.UrlRepository
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 
 
@@ -20,13 +21,11 @@ class UrlServiceImpl  (private val urlRepository: UrlRepository, private val red
                 "$baseUrl${saved.shortUrl}"
             }
 
-
+    @Cacheable(value = ["longUrls"], key = "#shortUrl")
     override fun resolveShortUrl(shortUrl: String): String? {
-        println(shortUrl)
         val originalUrl = urlRepository.findById(shortUrl)
             .orElse(null)
             ?.originalUrl
-        println(originalUrl)
         return originalUrl
     }
 
