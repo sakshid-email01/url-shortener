@@ -13,6 +13,11 @@ import java.time.OffsetDateTime
 @Table(name = "urls")
 data class UrlEntity(
 
+//
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    val id: Long? = null,
+
     @Id
     @Column(name = "short_url", unique = true, nullable = false, length = 255)
     val shortUrl: String,
@@ -21,12 +26,12 @@ data class UrlEntity(
     val originalUrl: String,
 
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false,
+    @Column(name = "created_at", updatable = false,
         columnDefinition = "TIMESTAMP WITH TIME ZONE")
     var createdAt: OffsetDateTime? = null,
 
     @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false,
+    @Column(name = "updated_at",
         columnDefinition = "TIMESTAMP WITH TIME ZONE")
     var updatedAt: OffsetDateTime? = null
 )

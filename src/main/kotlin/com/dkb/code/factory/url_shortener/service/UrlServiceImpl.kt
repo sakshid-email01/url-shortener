@@ -8,11 +8,16 @@ import org.springframework.stereotype.Service
 import java.util.Optional
 
 @Service
-class UrlServiceImpl  (private val urlRepository: UrlRepository) : UrlService {
+class UrlServiceImpl  (private val urlRepository: UrlRepository, private val redisService: RedisService) : UrlService {
+
+    private val baseUrl = "http://custom-url-shortener/"
 
     override fun createShortUrl(originalUrl: String): UrlEntity {
-        val url = UrlEntity(shortUrl = "{test}", originalUrl = originalUrl)
-        return urlRepository.save(url)
+        val shortKey = redisService.uniqueKey()
+        redisService.writeValue(shortKey, originalUrl)
+        val url = UrlEntity(shortUrl = "$baseUrl$shortKey", originalUrl = originalUrl)
+        val response = urlRepository.save(url)
+        return response
     }
 
 
