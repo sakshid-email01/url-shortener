@@ -3,20 +3,20 @@ package com.dkb.code.factory.url_shortener.entity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
+import jakarta.persistence.Index
 import jakarta.persistence.Table
 import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.UpdateTimestamp
 import java.time.OffsetDateTime
 
 
 @Entity
-@Table(name = "urls")
+@Table(
+    name = "urls",
+    indexes = [
+        Index(name = "idx_original_url", columnList = "original_url") // secondary index
+    ]
+)
 data class UrlEntity(
-
-//
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    val id: Long? = null,
 
     @Id
     @Column(name = "short_url", unique = true, nullable = false, length = 255)
@@ -30,8 +30,4 @@ data class UrlEntity(
         columnDefinition = "TIMESTAMP WITH TIME ZONE")
     var createdAt: OffsetDateTime? = null,
 
-    @UpdateTimestamp
-    @Column(name = "updated_at",
-        columnDefinition = "TIMESTAMP WITH TIME ZONE")
-    var updatedAt: OffsetDateTime? = null
 )
