@@ -8,13 +8,7 @@ import org.springframework.data.redis.core.StringRedisTemplate
 
 
 @Configuration
-class RedisConfig {
-
-    companion object {
-        const val ID_KEY = "all:urls:unique_id:key"
-        const val KEY_RADIX = 32
-        const val START_KEY = 100_000L
-    }
+class RedisConfig(private val appConfig: AppConfig) {
 
     @Bean
     fun redisTemplate(connectionFactory: RedisConnectionFactory): StringRedisTemplate {
@@ -28,6 +22,6 @@ class RedisConfig {
         connectionFactory: RedisConnectionFactory,
         redisTemplate: StringRedisTemplate
     ): RedisService {
-        return RedisService(connectionFactory, redisTemplate)
+        return RedisService(connectionFactory, redisTemplate, appConfig)
     }
 }

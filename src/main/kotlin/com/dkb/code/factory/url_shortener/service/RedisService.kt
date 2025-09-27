@@ -1,6 +1,6 @@
 package com.dkb.code.factory.url_shortener.service
 
-import com.dkb.code.factory.url_shortener.config.RedisConfig
+import com.dkb.code.factory.url_shortener.config.AppConfig
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.data.redis.support.atomic.RedisAtomicLong
@@ -10,7 +10,8 @@ import org.springframework.data.redis.support.atomic.RedisAtomicLong
  */
 class RedisService(
     private val connectionFactory: RedisConnectionFactory,
-    private val redisTemplate: StringRedisTemplate
+    private val redisTemplate: StringRedisTemplate,
+    private val appConfig: AppConfig
 ) {
 
     /**
@@ -18,17 +19,17 @@ class RedisService(
      * Uses RedisAtomicLong to maintain a distributed counter.
      */
     fun uniqueKey(): String {
-        val atomicLong = RedisAtomicLong(RedisConfig.ID_KEY, connectionFactory)
+        val atomicLong = RedisAtomicLong(appConfig.redisGlobalCounterKey, connectionFactory)
         var currentId = atomicLong.incrementAndGet()
 
         // Initialize counter to START_KEY if this is the first increment
         if (currentId == 1L) {
-            atomicLong.set(RedisConfig.START_KEY)
-            currentId = RedisConfig.START_KEY
+            atomicLong.set(appConfig.redisCounterStartValue.toLong())
+            currentId = appConfig.redisCounterStartValue.toLong()
         }
 
         // Return the ID as a base-32 string for short representation
-        return currentId.toString(RedisConfig.KEY_RADIX)
+        return currentId.toString(appConfig.redisCounterRadix.toInt())
     }
 
     /**

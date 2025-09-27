@@ -13,7 +13,7 @@ import java.time.OffsetDateTime
 @Table(
     name = "urls",
     indexes = [
-        Index(name = "idx_original_url", columnList = "original_url") // secondary index
+        Index(name = "idx_original_url", columnList = "original_url") // secondary index for faster lookups
     ]
 )
 data class UrlEntity(

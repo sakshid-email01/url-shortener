@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*
 
 
 @RestController
-@RequestMapping("/api/url")
+@RequestMapping("/urls")
 class UrlController(private val service: UrlService) {
 
     @PostMapping("/short")
