@@ -23,15 +23,15 @@ class Validator (private val appConfig: AppConfig) {
         }
 
         // 3. URL format check
-        try {
-            val url = URI.create(originalUrlNode)
-            if (url.host.isNullOrBlank() || url.scheme !in listOf("http", "https")) {
-                throw BadRequestException("error.invalid_protocol")
-            }
-        } catch (e: IllegalArgumentException) {
-            // Covers URISyntaxException wrapped by URI.create
-            throw BadRequestException("error.invalid_url_format")
-        }
+//        try {
+//            val url = URI.create(originalUrlNode)
+//            if (url.scheme !in listOf("http", "https")) {
+//                throw BadRequestException("error.invalid_protocol")
+//            }
+//        } catch (e: IllegalArgumentException) {
+//            // Covers URISyntaxException wrapped by URI.create
+//            throw BadRequestException("error.invalid_url_format")
+//        }
 
         // 4. Maximum length check
         if (originalUrlNode.length > appConfig.urlMaxLength.toInt()) {

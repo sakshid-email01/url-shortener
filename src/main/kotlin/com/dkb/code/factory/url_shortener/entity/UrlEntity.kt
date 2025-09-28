@@ -22,7 +22,7 @@ data class UrlEntity(
     @Column(name = "short_url", unique = true, nullable = false, length = 255)
     val shortUrl: String,
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 2048)
     val originalUrl: String,
 
     @CreationTimestamp
