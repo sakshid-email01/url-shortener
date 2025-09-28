@@ -14,7 +14,7 @@ class ValidatorTest {
         redisCounterStartValue = "100",
         redisCounterRadix = "32",
         urlShortenerBasePath = "http://localhost:8080/urls/",
-        urlMaxLength = "2048"  // kept small for test simplicity
+        urlMaxLength = "2048"
     )
 
     private val validator = Validator(appConfig)
