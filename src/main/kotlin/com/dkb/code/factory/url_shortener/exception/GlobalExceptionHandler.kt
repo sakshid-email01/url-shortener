@@ -19,6 +19,11 @@ class GlobalExceptionHandler {
         return ErrorResponseBuilder.build(HttpStatus.NOT_FOUND, ex.message, request)
     }
 
+    @ExceptionHandler(BadRequestException::class)
+    fun handleBadRequest(ex: BadRequestException, request: HttpServletRequest): ResponseEntity<ErrorResponse> {
+        return ErrorResponseBuilder.build(HttpStatus.BAD_REQUEST, ex.message, request)
+    }
+
     @ExceptionHandler(Exception::class)
     fun handleUnexpected(ex: Exception, request: HttpServletRequest): ResponseEntity<ErrorResponse> {
         log.error("Unexpected error occurred", ex)
