@@ -8,6 +8,7 @@ data class AppConfig(
     val redisCounterStartValue: String,
     val redisCounterRadix: String,
 
-    val urlShortenerBasePath: String
+    val urlShortenerBasePath: String,
+    val urlMaxLength: String
 )
 

@@ -1,50 +1,46 @@
 package com.dkb.code.factory.url_shortener.utils
 
+import com.dkb.code.factory.url_shortener.config.AppConfig
 import com.dkb.code.factory.url_shortener.exception.BadRequestException
 import com.fasterxml.jackson.databind.JsonNode
 import org.springframework.stereotype.Component
-import java.net.MalformedURLException
 import java.net.URI
 
 
 @Component
-class Validator {
-
-    companion object {
-        private const val MAX_URL_LENGTH = 2048
-        private val ALLOWED_PROTOCOLS = listOf("http", "https")
-    }
+class Validator (private val appConfig: AppConfig) {
 
     fun validateShortenRequest(request: JsonNode) {
         // 1. Null or empty check
         if (request.isEmpty) {
-            throw BadRequestException("Request body cannot be empty")
+            throw BadRequestException("error.empty_request")
         }
 
         // 2. Required field check
-        val originalUrlNode = request.get("originalUrl")?.asText()
+        val originalUrlNode = request.get("originalUrl")?.toString()
         if (originalUrlNode == null || originalUrlNode.isBlank()) {
-            throw BadRequestException("Field 'originalUrl' is required")
+            throw BadRequestException("error.missing_original_url")
         }
 
         // 3. URL format check
         try {
             val url = URI.create(originalUrlNode)
-            if (url.scheme !in ALLOWED_PROTOCOLS) {
-                throw BadRequestException("URL must start with http or https")
+            if (url.host.isNullOrBlank() || url.scheme !in listOf("http", "https")) {
+                throw BadRequestException("error.invalid_protocol")
             }
-        } catch (e: MalformedURLException) {
-            throw BadRequestException("Invalid URL format")
+        } catch (e: IllegalArgumentException) {
+            // Covers URISyntaxException wrapped by URI.create
+            throw BadRequestException("error.invalid_url_format")
         }
 
         // 4. Maximum length check
-        if (originalUrlNode.length > 2048) {
-            throw BadRequestException("URL too long (maximum 2048 characters allowed)")
+        if (originalUrlNode.length > appConfig.urlMaxLength.toInt()) {
+            throw BadRequestException("error.url_too_long")
         }
 
         // 5. Optional: Custom business rules
         if (originalUrlNode.contains("blocked-domain.com")) {
-            throw BadRequestException("URLs from this domain are not allowed")
+            throw BadRequestException("error.blocked_domain")
         }
     }
 }
