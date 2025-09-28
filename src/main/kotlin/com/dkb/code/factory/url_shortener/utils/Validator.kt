@@ -17,7 +17,7 @@ class Validator (private val appConfig: AppConfig) {
         }
 
         // 2. Required field check
-        val originalUrlNode = request.get("originalUrl")?.toString()
+        val originalUrlNode = request.get("originalUrl")?.asText()
         if (originalUrlNode == null || originalUrlNode.isBlank()) {
             throw BadRequestException("error.missing_original_url")
         }

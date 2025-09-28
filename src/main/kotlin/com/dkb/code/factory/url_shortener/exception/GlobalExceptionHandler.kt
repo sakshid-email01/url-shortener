@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 
-@ControllerAdvice(basePackages = ["com.dkb.code.factory.url_shortener.controller"])
+@ControllerAdvice
 class GlobalExceptionHandler (private val messageSource: MessageSource){
 
     private val log = LoggerFactory.getLogger(GlobalExceptionHandler::class.java)
