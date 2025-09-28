@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import com.dkb.code.factory.url_shortener.exception.UrlNotFoundException
 
 
 @RestController
@@ -21,7 +22,7 @@ class UrlController(private val service: UrlService) {
 
     @GetMapping("/resolve/{shortKey}")
     fun resolve(@PathVariable shortKey: String = ""): ResponseEntity<String> {
-        val resp = service.resolveShortUrl(shortKey) ?: "No URL mapping found"
+        val resp = service.resolveShortUrl(shortKey) ?: throw UrlNotFoundException()
         return ResponseEntity.ok(resp)
     }
 
@@ -33,7 +34,7 @@ class UrlController(private val service: UrlService) {
                 .header("Location", originalUrl)
                 .build()
         } else {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Short URL not found")
+            throw UrlNotFoundException()
         }
     }
 
