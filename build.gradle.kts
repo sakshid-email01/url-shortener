@@ -18,6 +18,8 @@ java {
 
 repositories {
     mavenCentral()
+    google()
+    mavenLocal()
 }
 
 dependencies {
@@ -32,6 +34,8 @@ dependencies {
     testImplementation("io.mockk:mockk:1.14.4")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("org.testcontainers:testcontainers:1.20.4")
+    testImplementation("org.testcontainers:junit-jupiter:1.20.4")
 
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("org.postgresql:postgresql")
@@ -42,7 +46,6 @@ dependencies {
     implementation("com.github.loki4j:loki-logback-appender:1.5.2")
 
     implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.springframework.boot:spring-boot-starter-web")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor") // Needed for @ConfigurationProperties
 
 }
