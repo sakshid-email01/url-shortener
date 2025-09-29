@@ -1,24 +1,16 @@
 package com.dkb.code.factory.url_shortener.unit.utils
 
-import com.dkb.code.factory.url_shortener.config.AppConfig
 import com.dkb.code.factory.url_shortener.exception.BadRequestException
+import com.dkb.code.factory.url_shortener.unit.config.GlobalConfigTest
 import com.dkb.code.factory.url_shortener.utils.Validator
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
-class ValidatorTest {
+class ValidatorTest : GlobalConfigTest() {
 
-    private val appConfig = AppConfig(
-        redisGlobalCounterKey = "counter",
-        redisCounterStartValue = "100",
-        redisCounterRadix = "32",
-        urlShortenerBasePath = "http://localhost:8080/urls/",
-        urlMaxLength = "2048"
-    )
-
-    private val validator = Validator(appConfig)
+    private val validator = Validator(config)
     private val mapper = ObjectMapper()
 
     @Test

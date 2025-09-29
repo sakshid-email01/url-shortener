@@ -1,7 +1,7 @@
 package com.dkb.code.factory.url_shortener.unit.service
 
-import com.dkb.code.factory.url_shortener.config.AppConfig
 import com.dkb.code.factory.url_shortener.service.RedisService
+import com.dkb.code.factory.url_shortener.unit.config.GlobalConfigTest
 import io.mockk.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -10,20 +10,12 @@ import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.data.redis.core.ValueOperations
 import org.springframework.data.redis.support.atomic.RedisAtomicLong
 
-class RedisServiceTest {
+class RedisServiceTest : GlobalConfigTest()  {
 
     private val connectionFactory: RedisConnectionFactory = mockk()
     private val redisTemplate: StringRedisTemplate = mockk()
     private val valueOps: ValueOperations<String, String> = mockk()
-    private val appConfig = AppConfig(
-        redisGlobalCounterKey = "globalCounter",
-        redisCounterStartValue = "100",
-        redisCounterRadix = "32",
-        urlShortenerBasePath = "http://localhost:8080/urls/",
-        urlMaxLength = "2048"
-    )
-
-    private val redisService = RedisService(connectionFactory, redisTemplate, appConfig)
+    private val redisService = RedisService(connectionFactory, redisTemplate, config)
 
     @Test
     fun `write and read value`() {
@@ -63,7 +55,7 @@ class RedisServiceTest {
 
         // mock RedisAtomicLong internals
         every { anyConstructed<RedisAtomicLong>().incrementAndGet() } returns 1L
-        every { anyConstructed<RedisAtomicLong>().set(appConfig.redisCounterStartValue.toLong()) } just Runs
+        every { anyConstructed<RedisAtomicLong>().set(config.redisCounterStartValue.toLong()) } just Runs
 
         // mock RedisConnectionFactory call
         every { connectionFactory.connection } returns mockk(relaxed = true)
@@ -73,7 +65,7 @@ class RedisServiceTest {
         // redisCounterStartValue is 100, in base-32 that is "34"
         assertEquals("34", result)
 
-        verify { anyConstructed<RedisAtomicLong>().set(appConfig.redisCounterStartValue.toLong()) }
+        verify { anyConstructed<RedisAtomicLong>().set(config.redisCounterStartValue.toLong()) }
     }
 
 

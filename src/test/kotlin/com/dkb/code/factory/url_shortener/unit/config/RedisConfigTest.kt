@@ -1,6 +1,5 @@
 package com.dkb.code.factory.url_shortener.unit.config
 
-import com.dkb.code.factory.url_shortener.config.AppConfig
 import com.dkb.code.factory.url_shortener.config.RedisConfig
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.*
@@ -8,17 +7,9 @@ import org.junit.jupiter.api.Test
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.core.StringRedisTemplate
 
-class RedisConfigTest {
+class RedisConfigTest : GlobalConfigTest() {
 
-    private val appConfig = AppConfig(
-        redisGlobalCounterKey = "counter",
-        redisCounterStartValue = "100",
-        redisCounterRadix = "32",
-        urlShortenerBasePath = "http://localhost:8080/urls/",
-        urlMaxLength = "2048"
-    )
-
-    private val redisConfig = RedisConfig(appConfig)
+    private val redisConfig = RedisConfig(config)
 
     @Test
     fun `redisTemplate bean should set connectionFactory`() {

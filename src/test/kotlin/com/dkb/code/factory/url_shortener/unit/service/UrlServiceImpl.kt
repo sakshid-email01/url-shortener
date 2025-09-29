@@ -1,28 +1,20 @@
 package com.dkb.code.factory.url_shortener.unit.service
 
-import com.dkb.code.factory.url_shortener.config.AppConfig
 import com.dkb.code.factory.url_shortener.entity.UrlEntity
 import com.dkb.code.factory.url_shortener.repository.UrlRepository
 import com.dkb.code.factory.url_shortener.service.RedisService
 import com.dkb.code.factory.url_shortener.service.UrlServiceImpl
+import com.dkb.code.factory.url_shortener.unit.config.GlobalConfigTest
 import io.mockk.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.util.*
 
-class UrlServiceImplTest {
+class UrlServiceImplTest : GlobalConfigTest() {
 
     private val urlRepository: UrlRepository = mockk()
     private val redisService: RedisService = mockk()
-    private val appConfig = AppConfig(
-        redisGlobalCounterKey = "counter",
-        redisCounterStartValue = "100",
-        redisCounterRadix = "32",
-        urlShortenerBasePath = "https://short.ly/",
-        urlMaxLength = "2048"
-    )
-
-    private val urlService = UrlServiceImpl(urlRepository, redisService, appConfig)
+    private val urlService = UrlServiceImpl(urlRepository, redisService, config)
 
     @Test
     fun `createShortUrl returns existing short url if original already stored`() {
@@ -33,7 +25,7 @@ class UrlServiceImplTest {
 
         val result = urlService.createShortUrl(originalUrl)
 
-        assertEquals("https://short.ly/abc123", result)
+        assertEquals("http://localhost:8080/urls/abc123", result)
         verify(exactly = 1) { urlRepository.findByOriginalUrl(originalUrl) }
         verify(exactly = 0) { redisService.uniqueKey() }
         verify(exactly = 0) { urlRepository.save(any()) }
@@ -51,7 +43,7 @@ class UrlServiceImplTest {
 
         val result = urlService.createShortUrl(originalUrl)
 
-        assertEquals("https://short.ly/xyz789", result)
+        assertEquals("http://localhost:8080/urls/xyz789", result)
         verify { urlRepository.findByOriginalUrl(originalUrl) }
         verify { redisService.uniqueKey() }
         verify { urlRepository.save(match { it.originalUrl == originalUrl && it.shortUrl == generatedKey }) }

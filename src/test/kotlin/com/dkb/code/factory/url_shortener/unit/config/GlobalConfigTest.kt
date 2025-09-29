@@ -4,7 +4,7 @@ import com.dkb.code.factory.url_shortener.config.AppConfig
 
 open class GlobalConfigTest {
 
-    protected val appConfig = AppConfig(
+    protected val config = AppConfig(
         redisGlobalCounterKey = "counter",
         redisCounterStartValue = "100",
         redisCounterRadix = "32",
