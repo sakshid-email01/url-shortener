@@ -1,5 +1,6 @@
-package com.dkb.code.factory.url_shortener.controller
+package com.dkb.code.factory.url_shortener.unit.controller
 
+import com.dkb.code.factory.url_shortener.controller.UrlController
 import com.dkb.code.factory.url_shortener.exception.UrlNotFoundException
 import com.dkb.code.factory.url_shortener.service.UrlService
 import com.dkb.code.factory.url_shortener.utils.Validator
@@ -14,7 +15,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import com.dkb.code.factory.url_shortener.controller.UrlController
 
 class UrlControllerTest {
 

@@ -1,6 +1,7 @@
-package com.dkb.code.factory.url_shortener.service
+package com.dkb.code.factory.url_shortener.unit.service
 
 import com.dkb.code.factory.url_shortener.config.AppConfig
+import com.dkb.code.factory.url_shortener.service.RedisService
 import io.mockk.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test

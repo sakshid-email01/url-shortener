@@ -1,7 +1,8 @@
-package com.dkb.code.factory.url_shortener.utils
+package com.dkb.code.factory.url_shortener.unit.utils
 
 import com.dkb.code.factory.url_shortener.config.AppConfig
 import com.dkb.code.factory.url_shortener.exception.BadRequestException
+import com.dkb.code.factory.url_shortener.utils.Validator
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
 import org.junit.jupiter.api.Assertions.*

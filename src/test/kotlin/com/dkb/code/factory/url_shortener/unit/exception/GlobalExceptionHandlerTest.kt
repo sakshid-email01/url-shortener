@@ -1,6 +1,8 @@
-package com.dkb.code.factory.url_shortener.exception
+package com.dkb.code.factory.url_shortener.unit.exception
 
-import com.dkb.code.factory.url_shortener.utils.ErrorResponseBuilder
+import com.dkb.code.factory.url_shortener.exception.BadRequestException
+import com.dkb.code.factory.url_shortener.exception.GlobalExceptionHandler
+import com.dkb.code.factory.url_shortener.exception.UrlNotFoundException
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.*
