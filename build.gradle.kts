@@ -18,8 +18,6 @@ java {
 
 repositories {
     mavenCentral()
-    google()
-    mavenLocal()
 }
 
 dependencies {
@@ -34,8 +32,8 @@ dependencies {
     testImplementation("io.mockk:mockk:1.14.4")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation("org.testcontainers:testcontainers:1.20.4")
-    testImplementation("org.testcontainers:junit-jupiter:1.20.4")
+    testImplementation("com.h2database:h2")
+    testImplementation("org.springframework.boot:spring-boot-starter-cache")
 
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("org.postgresql:postgresql")
