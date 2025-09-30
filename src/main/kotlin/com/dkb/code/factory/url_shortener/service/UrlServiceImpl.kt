@@ -13,8 +13,8 @@ class UrlServiceImpl  (private val urlRepository: UrlRepository, private val red
     private val baseUrl = appConfig.urlShortenerBasePath
 
     // check if the given original url is already shortened
-    // if yes, then return its existing short url = shortKey + baseurl
-    // if not, then create short url and return new short url = shortKey + baseurl
+    // if yes, then return its existing short url = baseurl + shortKey
+    // if not, then create short url and return new short url = baseurl + shortKey
 
     override fun createShortUrl(originalUrl: String): String =
         urlRepository.findByOriginalUrl(originalUrl)
@@ -26,12 +26,16 @@ class UrlServiceImpl  (private val urlRepository: UrlRepository, private val red
                 "$baseUrl${saved.shortUrl}"
             }
 
-    @Cacheable(value = ["\${redis.cache.name:longUrls}"], key = "#shortUrl")
+
+    @Cacheable(
+        value = ["\${redis.cache.name:longUrls}"],
+        key = "#shortUrl",
+        unless = "#result == null" // Do not cache null results
+    )
     override fun resolveShortUrl(shortUrl: String): String? {
-        val originalUrl = urlRepository.findById(shortUrl)
+        return urlRepository.findById(shortUrl)
             .orElse(null)
             ?.originalUrl
-        return originalUrl
     }
 
 }
