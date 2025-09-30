@@ -31,3 +31,8 @@ data class UrlEntity(
     var createdAt: OffsetDateTime? = null,
 
 )
+
+{
+    // JPA requires a no-arg constructor
+    protected constructor() : this("", "", null)
+}
