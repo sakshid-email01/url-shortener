@@ -2,11 +2,11 @@
 Description: This is URL shortening project that creates and resolves short URLs with Redis caching. It converts long URLs into shorter, manageable links. 
 
 # Table of Contents
-- [Features](#features)
-- [Design Decisions and the Rationale behind them/Core Concepts](#core-concepts)
-- [Data Flow](#data-flow)
+- Features
+- Design Decisions and the Rationale behind them/ Core Concepts
+- Data Flow
 - [Getting Started](#getting-started)
-- [API Endpoints](#api-endpoints)
+- Basic APIs
 - [Project Structure](#project-structure)
 - [Testing](#testing)
 
