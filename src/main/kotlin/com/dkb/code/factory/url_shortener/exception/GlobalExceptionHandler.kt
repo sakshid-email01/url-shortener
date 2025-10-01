@@ -16,6 +16,8 @@ class GlobalExceptionHandler (private val messageSource: MessageSource){
     private val log = LoggerFactory.getLogger(GlobalExceptionHandler::class.java)
     private val locale = LocaleContextHolder.getLocale()
 
+
+    // UrlNotFoundException
     @ExceptionHandler(UrlNotFoundException::class)
     fun handleUrlNotFound(ex: UrlNotFoundException, request: HttpServletRequest): ResponseEntity<ErrorResponse> {
         log.info("Short URL not found: {}", ex.message)
@@ -23,20 +25,20 @@ class GlobalExceptionHandler (private val messageSource: MessageSource){
         return ErrorResponseBuilder.build(HttpStatus.NOT_FOUND, message, request)
     }
 
+
+    // BadRequestException
     @ExceptionHandler(BadRequestException::class)
     fun handleBadRequest(ex: BadRequestException, request: HttpServletRequest): ResponseEntity<ErrorResponse> {
-        val message = messageSource.getMessage(ex.message, null,ex.message, locale)
+        val message = messageSource.getMessage("error.invalid_request", null,ex.message, locale)
         return ErrorResponseBuilder.build(HttpStatus.BAD_REQUEST, message, request)
     }
 
+
+    // Exception
     @ExceptionHandler(Exception::class)
     fun handleUnexpected(ex: Exception, request: HttpServletRequest): ResponseEntity<ErrorResponse> {
         log.error("Unexpected error occurred", ex)
         val message = messageSource.getMessage("error.internal", null,ex.message, locale)
-        return ErrorResponseBuilder.build(
-            HttpStatus.INTERNAL_SERVER_ERROR,
-            message,
-            request
-        )
+        return ErrorResponseBuilder.build(HttpStatus.INTERNAL_SERVER_ERROR, message, request)
     }
 }
