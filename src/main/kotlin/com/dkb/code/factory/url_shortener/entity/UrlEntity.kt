@@ -33,6 +33,6 @@ data class UrlEntity(
 )
 
 {
-    // JPA requires a no-arg constructor
+    // JPA no-arg constructor
     protected constructor() : this("", "", null)
 }
