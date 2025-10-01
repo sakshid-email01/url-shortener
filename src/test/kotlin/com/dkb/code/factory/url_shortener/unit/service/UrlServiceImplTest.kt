@@ -15,7 +15,7 @@ class UrlServiceImplTest : GlobalConfigTest() {
 
     private val urlRepository: UrlRepository = mockk()
     private val redisService: RedisService = mockk()
-    private val urlService = UrlServiceImpl(urlRepository, redisService, dataset)
+    private val urlService = UrlServiceImpl(urlRepository, redisService, config)
 
     @Test
     fun `createShortUrl returns existing short url if original already stored`() {
