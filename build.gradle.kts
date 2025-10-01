@@ -41,6 +41,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
     implementation("com.github.loki4j:loki-logback-appender:1.5.2")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
 
     implementation("org.springframework.boot:spring-boot-starter")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor") // Needed for @ConfigurationProperties
@@ -59,6 +60,11 @@ allOpen {
     annotation("jakarta.persistence.Embeddable")
 }
 
+sourceSets {
+    test {
+        java.srcDirs("src/test/kotlin", "src/test/kotlin/com/dkb/code/factory/url_shortener/unit", "src/test/kotlin/com/dkb/code/factory/url_shortener/integration")
+    }
+}
 tasks.withType<Test> {
     useJUnitPlatform()
 }
