@@ -125,7 +125,10 @@ GET /resolve/{shortUrl}
 # IV) Data Flow
 ## Shorten a URL
 When a user submits a long url, the client sends a POST request to /urls with the long url. Then:
-Our system receives the request and validates the long URL (simple check). We check if it doesn't already exist in our system (we don't want collisions). We can query our database to see if the long URL is already present. If the URL is valid and doesn't already exist, we can proceed to generate a short URL.
+Our system receives the request and validates the long URL (simple check). 
+We check if it doesn't already exist in our system (we don't want collisions). 
+We can query our database to see if the long URL is already present. 
+If the URL is valid and doesn't already exist, we can proceed to generate a short URL.
 
 Redis Counter + Base 32 encoding => unique short code
 
@@ -134,5 +137,7 @@ Once we have the short URL, we can proceed to insert it into our database. Final
 ## Getting the corresponding original url
 When a user accesses a shortened URL, the following process occurs:
 The user's browser sends a GET request to our server with the short code (e.g., GET /abc123).
-Our Primary Server receives this request, the server first checks the cache. If the short code is found in the cache (a cache hit), the server retrieves the long URL from the cache, significantly reducing latency. If not found (a cache miss), the server queries the database, retrieves the long URL, and then stores it in the cache for future requests.
+Our Primary Server receives this request, the server first checks the cache. 
+If the short code is found in the cache (a cache hit), the server retrieves the long URL from the cache, significantly reducing latency. 
+If not found (a cache miss), the server queries the database, retrieves the long URL, and then stores it in the cache for future requests.
 
