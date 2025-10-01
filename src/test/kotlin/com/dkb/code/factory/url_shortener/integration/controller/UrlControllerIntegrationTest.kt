@@ -1,96 +1,89 @@
 package com.dkb.code.factory.url_shortener.integration.controller
 
-import com.dkb.code.factory.url_shortener.controller.UrlController
+import com.dkb.code.factory.url_shortener.dto.ShortenRequest
+import com.dkb.code.factory.url_shortener.exception.UrlNotFoundException
 import com.dkb.code.factory.url_shortener.service.UrlService
 import com.dkb.code.factory.url_shortener.utils.Validator
-import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
-import org.mockito.kotlin.whenever
-import org.mockito.kotlin.any
-import org.mockito.kotlin.verify
+import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.post
+import org.mockito.BDDMockito.*
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 
-@WebMvcTest(controllers = [UrlController::class])
-class UrlControllerIntegrationTest(
-    @Autowired val mockMvc: MockMvc,
-    @Autowired val objectMapper: ObjectMapper
+@SpringBootTest
+@AutoConfigureMockMvc
+class UrlControllerIntegrationTest @Autowired constructor(
+    val mockMvc: MockMvc,
+    val objectMapper: ObjectMapper
 ) {
 
     @MockitoBean
-    lateinit var service: UrlService
+    lateinit var urlService: UrlService
 
     @MockitoBean
     lateinit var validator: Validator
 
     @Test
-    fun `shorten should return 200 with short url`() {
-        val request = mapOf("originalUrl" to "https://example.com")
+    fun `POST shorten should return shortened url`() {
+        val request = ShortenRequest("https://example.com")
+        given(urlService.createShortUrl(request.originalUrl)).willReturn("http://localhost:8080/abc123")
 
-        whenever(service.createShortUrl("https://example.com"))
-            .thenReturn("http://localhost:8080/urls/abc123")
+        mockMvc.post("/urls/short") {
+            contentType = MediaType.APPLICATION_JSON
+            content = objectMapper.writeValueAsString(request)
+        }
+            .andExpect {
+                status { isOk() }
+            }
 
-        mockMvc.perform(
-            post("/urls/short")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request))
-        )
-            .andExpect(status().isOk)
-            .andExpect(content().string("http://localhost:8080/urls/abc123"))
-
-        verify(validator).validateShortenRequest(any<JsonNode>())
-        verify(service).createShortUrl("https://example.com")
+        verify(validator).validateShortenRequest(request)
+        verify(urlService).createShortUrl("https://example.com")
     }
 
     @Test
-    fun `resolve should return 200 when url exists`() {
-        whenever(service.resolveShortUrl("abc123"))
-            .thenReturn("https://example.com")
+    fun `GET resolve should return original url`() {
+        given(urlService.resolveShortUrl("abc123")).willReturn("https://example.com")
 
-        mockMvc.perform(get("/urls/resolve/abc123"))
-            .andExpect(status().isOk)
-            .andExpect(content().string("https://example.com"))
+        val mvcResult = mockMvc.get("/urls/resolve/abc123")
+            .andExpect {
+                status { isOk() }
+            }
+            .andReturn()
 
-        verify(service).resolveShortUrl("abc123")
+        assertEquals(true, mvcResult.response.contentAsString.contains("https://example.com"))
+        verify(urlService).resolveShortUrl("abc123")
     }
 
     @Test
-    fun `resolve should return 404 when url not found`() {
-        whenever(service.resolveShortUrl("missing"))
-            .thenReturn(null)
+    fun `GET redirect should return 302 when url exists`() {
+        given(urlService.resolveShortUrl("abc123")).willReturn("https://redirect.com")
 
-        mockMvc.perform(get("/urls/resolve/missing"))
-            .andExpect(status().isNotFound)
+        val mvcResult = mockMvc.get("/urls/abc123")
+            .andExpect {
+                status { isFound() }
+            }
+            .andReturn()
 
-        verify(service).resolveShortUrl("missing")
+        assertEquals("https://redirect.com", mvcResult.response.getHeader("Location"))
+        verify(urlService).resolveShortUrl("abc123")
     }
 
     @Test
-    fun `redirect should return 302 when url exists`() {
-        whenever(service.resolveShortUrl("abc123"))
-            .thenReturn("https://example.com")
+    fun `GET redirect should throw UrlNotFoundException when url does not exist`() {
+        given(urlService.resolveShortUrl("missing")).willReturn(null)
 
-        mockMvc.perform(get("/urls/abc123"))
-            .andExpect(status().isFound)
-            .andExpect(header().string("Location", "https://example.com"))
+        mockMvc.get("/urls/missing")
+            .andExpect {
+                status { isNotFound() }
+            }
 
-        verify(service).resolveShortUrl("abc123")
-    }
-
-    @Test
-    fun `redirect should return 404 when url not found`() {
-        whenever(service.resolveShortUrl("missing"))
-            .thenReturn(null)
-
-        mockMvc.perform(get("/urls/missing"))
-            .andExpect(status().isNotFound)
-
-        verify(service).resolveShortUrl("missing")
+        verify(urlService).resolveShortUrl("missing")
     }
 }

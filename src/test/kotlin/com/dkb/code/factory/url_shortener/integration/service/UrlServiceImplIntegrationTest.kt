@@ -2,7 +2,6 @@ package com.dkb.code.factory.url_shortener.integration.service
 
 import com.dkb.code.factory.url_shortener.entity.UrlEntity
 import com.dkb.code.factory.url_shortener.repository.UrlRepository
-import com.dkb.code.factory.url_shortener.service.RedisService
 import com.dkb.code.factory.url_shortener.service.UrlService
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -12,11 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
 
 @SpringBootTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY) // use H2
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY) // H2 for tests
 @Transactional // rollback after each test
-class UrlServiceImplIntegrationTest @Autowired constructor (
-       val urlService: UrlService,
-       val urlRepository: UrlRepository,
+class UrlServiceImplIntegrationTest @Autowired constructor(
+    val urlService: UrlService,
+    val urlRepository: UrlRepository,
 ) {
 
     @Test
@@ -24,10 +23,10 @@ class UrlServiceImplIntegrationTest @Autowired constructor (
         val originalUrl = "https://newsite.com"
         val shortUrl = urlService.createShortUrl(originalUrl)
 
-        // Service returns a full short URL
-        assertTrue(shortUrl.contains("http://localhost:8080/urls/"))
+        // Service should return a shortened URL with base path
+        assertTrue(shortUrl.startsWith("http://localhost:8080/urls"))
 
-        // Repository should now have the entity
+        // Repository should contain the new mapping
         val saved = urlRepository.findByOriginalUrl(originalUrl)
         assertNotNull(saved)
         assertEquals(originalUrl, saved!!.originalUrl)
