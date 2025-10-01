@@ -94,6 +94,14 @@ Database Backup: We could also implement a backup system that periodically takes
 # III) Basic APIs
 
 ### // Shorten a URL
+It implements idempotent creation: if the long URL already has a short URL, return it; otherwise create one and return the new short URL.
+Tries to find an existing UrlEntity by originalUrl using the repository. Note that the originalUrl is made a secondary pk for faster lookups.
+If found, takes its short code, prefixes it with baseUrl, and returns that full short URL string.
+If not found, it:
+generates a new unique key from redisService.uniqueKey() and builds it's corresponding short code,
+creates & saves a new UrlEntity with the short code and it's original url, 
+and returns full short URL string = baseUrl + saved short code.
+
 POST /short
 {
   "originalUrl": "https://www.example.com/some/very/long/url"
