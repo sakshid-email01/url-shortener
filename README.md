@@ -5,10 +5,7 @@ Description: This is URL shortening project that creates and resolves short URLs
 - Features
 - Design Decisions and the Rationale behind them/ Core Concepts
 - Data Flow
-- [Getting Started](#getting-started)
 - Basic APIs
-- [Project Structure](#project-structure)
-- [Testing](#testing)
 
 # I) Features
 ## Functional:
