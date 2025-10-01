@@ -1,0 +1,176 @@
+openapi: 3.0.3
+info:
+  title: URL Shortener API
+  version: 1.0.0
+  description: API for creating short URLs, resolving them, and redirecting.
+
+servers:
+  - url: http://localhost:8080
+    description: Local server
+
+paths:
+
+  /urls/short:
+    post:
+      summary: Shorten a URL
+      description: Accepts a long URL and returns a shortened URL.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShortenRequest'
+            example:
+              originalUrl: "https://example.com"
+      responses:
+        '200':
+          description: URL shortened successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+              examples:
+                successExample:
+                  value:
+                    status: 200
+                    message: "Task performed successfully"
+                    timestamp: "2025-10-01T09:00:00Z"
+                    data: "https://short.ly/abc123"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /urls/resolve/{shortKey}:
+    get:
+      summary: Resolve a short URL
+      description: Returns the original long URL for a given short key.
+      parameters:
+        - name: shortKey
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Original URL retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+              examples:
+                successExample:
+                  value:
+                    status: 200
+                    message: "Task performed successfully"
+                    timestamp: "2025-10-01T09:00:00Z"
+                    data: "https://example.com"
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /urls/{shortKey}:
+    get:
+      summary: Redirect to original URL
+      description: Redirects to the original URL if shortKey exists.
+      parameters:
+        - name: shortKey
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Redirecting to original URL
+          headers:
+            Location:
+              description: URL to redirect to
+              schema:
+                type: string
+              example: "https://example.com"
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  schemas:
+    ShortenRequest:
+      type: object
+      required:
+        - originalUrl
+      properties:
+        originalUrl:
+          type: string
+          description: The original long URL to shorten
+          example: "https://example.com"
+
+    SuccessResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+        message:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        data:
+          type: string
+          description: Result data (shortened URL or original URL)
+
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+        message:
+          type: string
+        error:
+          type: string
+        path:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+  responses:
+    BadRequest:
+      description: Bad Request (invalid or missing data)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            badRequestExample:
+              value:
+                status: 400
+                message: "originalUrl is required"
+                timestamp: "2025-10-01T09:01:00Z"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            notFoundExample:
+              value:
+                status: 404
+                message: "No URL mapping found"
+                timestamp: "2025-10-01T09:01:00Z"
+
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            internalErrorExample:
+              value:
+                status: 500
+                message: "Internal server error. Please contact support at dummyemail@support.com."
+                timestamp: "2025-10-01T09:01:00Z"
