@@ -8,7 +8,7 @@ import org.springframework.data.redis.core.StringRedisTemplate
 
 
 @Configuration
-class RedisConfig(private val appConfig: AppConfig) {
+class RedisConfig(private val config: GlobalConfig) {
 
     @Bean
     fun redisTemplate(connectionFactory: RedisConnectionFactory): StringRedisTemplate {
@@ -22,6 +22,6 @@ class RedisConfig(private val appConfig: AppConfig) {
         connectionFactory: RedisConnectionFactory,
         redisTemplate: StringRedisTemplate
     ): RedisService {
-        return RedisService(connectionFactory, redisTemplate, appConfig)
+        return RedisService(connectionFactory, redisTemplate, config)
     }
 }

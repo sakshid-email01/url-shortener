@@ -1,6 +1,6 @@
 package com.dkb.code.factory.url_shortener.service
 
-import com.dkb.code.factory.url_shortener.config.AppConfig
+import com.dkb.code.factory.url_shortener.config.GlobalConfig
 import com.dkb.code.factory.url_shortener.entity.UrlEntity
 import com.dkb.code.factory.url_shortener.repository.UrlRepository
 import org.springframework.cache.annotation.Cacheable
@@ -9,10 +9,10 @@ import org.springframework.transaction.annotation.Transactional
 
 
 @Service
-class UrlServiceImpl  (private val urlRepository: UrlRepository, private val redisService: RedisService, private val appConfig: AppConfig) : UrlService {
+class UrlServiceImpl  (private val urlRepository: UrlRepository, private val redisService: RedisService, private val globalConfig: GlobalConfig) : UrlService {
 
-    private val baseUrl = appConfig.urlShortenerBasePath
-    
+    private val baseUrl = globalConfig.urlShortenerBasePath
+
     //idempotent creation: if the long URL already has a short URL, return it;
     //otherwise create one and return the new short URL
     @Transactional

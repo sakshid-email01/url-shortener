@@ -1,6 +1,6 @@
 package com.dkb.code.factory.url_shortener.utils
 
-import com.dkb.code.factory.url_shortener.config.AppConfig
+import com.dkb.code.factory.url_shortener.config.GlobalConfig
 import com.dkb.code.factory.url_shortener.dto.ShortenRequest
 import com.dkb.code.factory.url_shortener.exception.BadRequestException
 import org.springframework.stereotype.Component
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 
 
 @Component
-class Validator (private val appConfig: AppConfig) {
+class Validator (private val globalConfig: GlobalConfig) {
 
     fun validateShortenRequest(request: ShortenRequest) {
         val originalUrl = request.originalUrl
@@ -19,7 +19,7 @@ class Validator (private val appConfig: AppConfig) {
         }
 
         // 2. Maximum length check
-        if (originalUrl.length > appConfig.urlMaxLength.toInt()) {
+        if (originalUrl.length > globalConfig.urlMaxLength.toInt()) {
             throw BadRequestException("error.url_too_long")
         }
 
