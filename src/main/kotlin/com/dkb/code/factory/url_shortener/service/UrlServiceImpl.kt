@@ -5,26 +5,27 @@ import com.dkb.code.factory.url_shortener.entity.UrlEntity
 import com.dkb.code.factory.url_shortener.repository.UrlRepository
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 
 @Service
 class UrlServiceImpl  (private val urlRepository: UrlRepository, private val redisService: RedisService, private val appConfig: AppConfig) : UrlService {
 
     private val baseUrl = appConfig.urlShortenerBasePath
-
-    // check if the given original url is already shortened
-    // if yes, then return its existing short url = baseurl + shortKey
-    // if not, then create short url and return new short url = baseurl + shortKey
-
-    override fun createShortUrl(originalUrl: String): String =
-        urlRepository.findByOriginalUrl(originalUrl)
-            ?.shortUrl
-            ?.let { "$baseUrl$it" }
-            ?: run {
-                val shortKey = redisService.uniqueKey()
-                val saved = urlRepository.save(UrlEntity(shortUrl = shortKey, originalUrl = originalUrl))
-                "$baseUrl${saved.shortUrl}"
-            }
+    
+    //idempotent creation: if the long URL already has a short URL, return it;
+    //otherwise create one and return the new short URL
+    @Transactional
+    override fun createShortUrl(originalUrl: String): String {
+        val existing = urlRepository.findByOriginalUrl(originalUrl)
+        if (existing != null) {
+            return "$baseUrl${existing.shortUrl}"
+        } else {
+            val shortKey = redisService.uniqueKey()
+            val saved = urlRepository.save(UrlEntity(shortUrl = shortKey, originalUrl = originalUrl))
+            return "$baseUrl${saved.shortUrl}"
+        }
+    }
 
 
     @Cacheable(
