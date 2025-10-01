@@ -16,7 +16,7 @@ class UrlController(private val service: UrlService, private val validator: Vali
 
     //APIs return value for happy basic flows, in case of error >> custom GlobalExceptionHandling present
     // response builders are used to generate controller responses
-    // error messages stored in separte message.properties file
+    // error messages stored in separate message.properties file
 
 
 
