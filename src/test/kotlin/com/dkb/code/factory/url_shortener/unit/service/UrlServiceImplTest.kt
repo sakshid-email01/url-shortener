@@ -1,5 +1,6 @@
 package com.dkb.code.factory.url_shortener.unit.service
 
+import com.dkb.code.factory.url_shortener.config.GlobalConfig
 import com.dkb.code.factory.url_shortener.entity.UrlEntity
 import com.dkb.code.factory.url_shortener.repository.UrlRepository
 import com.dkb.code.factory.url_shortener.service.RedisService
@@ -14,7 +15,7 @@ class UrlServiceImplTest : GlobalConfigTest() {
 
     private val urlRepository: UrlRepository = mockk()
     private val redisService: RedisService = mockk()
-    private val urlService = UrlServiceImpl(urlRepository, redisService, config)
+    private val urlService = UrlServiceImpl(urlRepository, redisService, dataset)
 
     @Test
     fun `createShortUrl returns existing short url if original already stored`() {
