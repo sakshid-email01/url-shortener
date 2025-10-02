@@ -1,6 +1,8 @@
 # DKB CodeFactory - URL Shortener
 ### Project Description: 
 This is URL shortening project that creates and resolves short URLs with Redis caching. It converts long URLs into shorter, manageable links. 
+Built with: Kotlin, Spring Boot, PostgreSQL, Redis(global counter + caching), OpenAPI
+
 ### Task Description:
 ![Task_Description](docs/images/task_description.png)
 
