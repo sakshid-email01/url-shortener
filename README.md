@@ -1,7 +1,9 @@
 # DKB CodeFactory - URL Shortener
-Description: This is URL shortening project that creates and resolves short URLs with Redis caching. It converts long URLs into shorter, manageable links. 
-- Given question description
-High_Level_Architecture Diagram ![HLD_Diagram](docs/images/High_Level_Architecture.png) 
+Task Description: This is URL shortening project that creates and resolves short URLs with Redis caching. It converts long URLs into shorter, manageable links. 
+### Question PDF 
+![Task_PDF](docs/URL-Shortener.pdf)
+High_Level_Architecture Diagram 
+![HLD_Diagram](docs/images/High_Level_Architecture.png) 
 
 # Table of Contents
 - Features
