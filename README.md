@@ -10,8 +10,8 @@ This is URL shortening project that creates and resolves short URLs with Redis c
 # Table of Contents
 - Features
 - Design Decisions and the Rationale behind them/ Core Concepts
-- Data Flow
 - Basic APIs
+- Data Flow
 
 # I) Features
 ## Functional:
