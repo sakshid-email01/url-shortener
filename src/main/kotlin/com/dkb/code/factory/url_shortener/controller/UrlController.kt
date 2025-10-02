@@ -9,6 +9,9 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
+// URLs are kept in 1 controller for the MVP to minimize complexity and accelerate delivery;
+// the design is intentionally modular and can be split into separate read/write controllers
+// and services later to optimize for differing scale, operational and business requirements.
 
 @RestController
 @RequestMapping("/urls")
