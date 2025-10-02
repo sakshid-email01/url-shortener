@@ -1,0 +1,5 @@
+
+# main goal while developing this MVP is to validate the idea quickly
+# — build features fast, test them, and get feedback.
+# Adding Docker setup (Dockerfile, Compose, networking, config externalization)
+# is kept as a further development for now so that it does not slow down MVP delivery.
